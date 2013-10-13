@@ -49,14 +49,11 @@ public class Campo {
         this.costoHora = costoHora;
     }
 
-    public Local getId_local() {
-        return id_local;
+    public Local getLocal() {
+        return local;
     }
 
-    public void setId_local(Local id_local) {
-        this.id_local = id_local;
+    public void setLocal(Local local) {
+        this.local = local;
     }
-    
-    
-    
 }
