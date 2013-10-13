@@ -31,9 +31,9 @@ public class LocalDAO extends BaseDAO{
             stmt.setString(1, "%" + nombre + "%");
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Campo vo = new Campo();
+                Local vo = new Local();
                 vo.setId(rs.getInt("id"));
-                vo.setDescripcion(rs.getString("nombre"));
+                vo.setDescripcion(rs.getString("direccion"));
                 vo.setDescripcion(rs.getString("descripcion"));
                 lista.add(vo);
             }
@@ -49,19 +49,20 @@ public class LocalDAO extends BaseDAO{
         return lista;
     }
 
-    public Campo insertar(Campo campo) throws DAOExcepcion {
-        String query = "insert into campo(descripcion,estado,tipo,costoHora,local) values (?,?,?,?,?)";
+    public Local insertar(Local local) throws DAOExcepcion {
+        String query = "insert into local(id, direccion, descripcion, estado, maps, telefono) values (?,?,?,?,?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, campo.getDescripcion());
-            stmt.setInt(2, campo.getEstado());
-            stmt.setInt(3, campo.getTipo());
-            stmt.setDouble(4, campo.getCostoHora());
-            stmt.setInt(5, campo.getLocal().getId());
+            stmt.setInt(1, local.getId());
+            stmt.setString(2, local.getDireccion());
+            stmt.setString(3, local.getDescripcion());
+            stmt.setInt(4, local.getEstado());
+            stmt.setString(5, local.getMaps());
+            stmt.setString(5, local.getTelefono());
 
             int i = stmt.executeUpdate();
             if (i != 1) {
@@ -75,7 +76,7 @@ public class LocalDAO extends BaseDAO{
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-            campo.setId(id);
+            local.setId(id);
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -85,26 +86,27 @@ public class LocalDAO extends BaseDAO{
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return local;
     }
 
-    public Campo obtener(int idCampo) throws DAOExcepcion {
-        Campo campo = new Campo();
+    public Local obtener(int IdLocal) throws DAOExcepcion {
+        Local local = new Local();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select id, descripcion, estado, tipo, costoHora from campo where id=?";
+            String query = "select id, direccion, descripcion, estado, maps, telefono from local where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idCampo);
+            stmt.setInt(1, IdLocal);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                campo.setId(rs.getInt(1));
-                campo.setDescripcion(rs.getString(2));
-                campo.setEstado(rs.getInt(3));
-                campo.setTipo(rs.getInt(4));
-                campo.setCostoHora(rs.getDouble(5));
+                local.setId(rs.getInt(1));
+                local.setDireccion(rs.getString(2));
+                local.setDescripcion(rs.getString(3));
+                local.setEstado(rs.getInt(4));
+                local.setMaps(rs.getString(5));
+                local.setTelefono(rs.getString(6));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -114,17 +116,17 @@ public class LocalDAO extends BaseDAO{
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return local;
     }
 
-    public void eliminar(int idCampo) throws DAOExcepcion {
-        String query = "delete from campo WHERE id=?";
+    public void eliminar(int idlocal) throws DAOExcepcion {
+        String query = "delete from local WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idCampo);
+            stmt.setInt(1, idlocal);
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
@@ -138,18 +140,19 @@ public class LocalDAO extends BaseDAO{
         }
     }
 
-    public Campo actualizar(Campo campo) throws DAOExcepcion {
-        String query = "update campo set descripcion=?,estado=?,tipo=?,costoHora=?,local=? where id=?";
+    public Local actualizar(Local local) throws DAOExcepcion {
+        String query = "update campo set direccion=?,descripcion=?,estado=?,maps=?,telefono=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, campo.getDescripcion());
-            stmt.setInt(2, campo.getEstado());
-            stmt.setInt(3, campo.getTipo());
-            stmt.setDouble(4, campo.getCostoHora());
-            stmt.setInt(5, campo.getLocal().getId());
+            stmt.setString(1, local.getDireccion());
+            stmt.setString(2, local.getDescripcion());
+            stmt.setInt(3, local.getEstado());
+            stmt.setString(4, local.getMaps());
+            stmt.setString(5, local.getDescripcion());
+            stmt.setInt(6, local.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -161,26 +164,27 @@ public class LocalDAO extends BaseDAO{
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return local;
     }
 
-    public Collection<Campo> listar() throws DAOExcepcion {
-        Collection<Campo> c = new ArrayList<Campo>();
+    public Collection<Local> listar() throws DAOExcepcion {
+        Collection<Local> c = new ArrayList<Local>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, descripcion, estado, tipo, costoHora from campo order by id";
+            String query = "id, direccion, descripcion, estado, maps, telefono from local order by direccion";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Campo item = new Campo();
+                Local item = new Local();
                 item.setId(rs.getInt("id"));
+                item.setDireccion(rs.getString("direccion"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setEstado(rs.getInt("estado"));
-                item.setTipo(rs.getInt("tipo"));
-                item.setCostoHora(rs.getInt("costoHora"));
+                item.setMaps(rs.getString("maps"));
+                item.setTelefono(rs.getString("telefono"));
                 c.add(item);
             }
 
