@@ -1,20 +1,26 @@
 package app.dao;
 
-import app.zelper.ConexionBD;
+
+import app.dao.BaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import model.Campo;
 
-public class CampoDAO {
+import app.excepcion.DAOExcepcion;
 
-    public Collection<Categoria> buscarPorNombre(String nombre)
+import app.zelper.ConexionBD;
+import app.model.Campo;
+
+public class CampoDAO extends BaseDAO{
+ 
+ 
+    public Collection<Campo> buscarPorNombre(String nombre)
             throws DAOExcepcion {
-        String query = "select id_categoria, nombre, descripcion from categoria where nombre like ?";
-        Collection<Categoria> lista = new ArrayList<Categoria>();
+            String query = "select id, descripcion,estado from campo where descripcion like ?";
+        Collection<Campo> lista = new ArrayList<Campo>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -24,9 +30,9 @@ public class CampoDAO {
             stmt.setString(1, "%" + nombre + "%");
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Categoria vo = new Categoria();
-                vo.setIdCategoria(rs.getInt("id_categoria"));
-                vo.setNombre(rs.getString("nombre"));
+                Campo vo = new Campo();
+                vo.setId(rs.getInt("id"));
+                vo.setDescripcion(rs.getString("nombre"));
                 vo.setDescripcion(rs.getString("descripcion"));
                 lista.add(vo);
             }

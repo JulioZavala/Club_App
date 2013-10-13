@@ -1,5 +1,6 @@
-package dao;
+package app.dao;
 
+import app.dao.BaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,10 +8,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import excepcion.DAOExcepcion;
-import model.General;
-//import ZelpPer.ConexionDB;
-import model.Servicio;
+import app.excepcion.DAOExcepcion;
+import app.model.General;
+import app.zelper.ConexionBD;
+import app.model.Servicio;
 
 public class GeneralDAO extends BaseDAO {
 
@@ -22,7 +23,7 @@ public class GeneralDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, "%" + nombre + "%");
             rs = stmt.executeQuery();
@@ -51,7 +52,7 @@ public class GeneralDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, vo.getDescripcion());
             stmt.setDouble(2, vo.getCosto_hora());
@@ -87,7 +88,7 @@ public class GeneralDAO extends BaseDAO {
         ResultSet rs = null;
         try {
             String query = "select id, descripcion, costo_hora from servicio where id=?";
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setInt(1, idServicio);
             rs = stmt.executeQuery();
@@ -112,7 +113,7 @@ public class GeneralDAO extends BaseDAO {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setInt(1, IdServicio);
             int i = stmt.executeUpdate();
@@ -133,7 +134,7 @@ public class GeneralDAO extends BaseDAO {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, vo.getDescripcion());
             stmt.setDouble(2, vo.getCosto_hora());
@@ -158,7 +159,7 @@ public class GeneralDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             String query = "select id, descripcion, costo_total from servicio order by descripcion";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();

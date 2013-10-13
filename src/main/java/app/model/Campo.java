@@ -1,5 +1,5 @@
 
-package model;
+package app.model;
 
 
 public class Campo {

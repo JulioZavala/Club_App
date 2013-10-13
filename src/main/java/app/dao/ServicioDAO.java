@@ -1,5 +1,6 @@
-package dao;
+package app.dao;
 
+import app.dao.BaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,9 +8,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import excepcion.DAOExcepcion;
-import model.General;
-//import ZelpPer.ConexionDB;
+import app.excepcion.DAOExcepcion;
+import app.model.General;
+import app.zelper.ConexionBD;
 
 public class ServicioDAO extends BaseDAO {
 
@@ -21,7 +22,7 @@ public class ServicioDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, "%" + nombre + "%");
             rs = stmt.executeQuery();
@@ -50,7 +51,7 @@ public class ServicioDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, vo.getUsuario());
             stmt.setString(2, vo.getPassword());
@@ -86,7 +87,7 @@ public class ServicioDAO extends BaseDAO {
         ResultSet rs = null;
         try {
             String query = "select id, usuario, password from General where id=?";
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setInt(1, idusuario);
             rs = stmt.executeQuery();
@@ -111,7 +112,7 @@ public class ServicioDAO extends BaseDAO {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setInt(1, IdGeneral);
             int i = stmt.executeUpdate();
@@ -132,7 +133,7 @@ public class ServicioDAO extends BaseDAO {
         Connection con = null;
         PreparedStatement stmt = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, vo.getUsuario());
             stmt.setString(2, vo.getPassword());
@@ -157,7 +158,7 @@ public class ServicioDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            con = ConexionDB.obtenerConexion();
+            con = ConexionBD.obtenerConexion();
             String query = "select id, usuario, password from general order by usuario";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
