@@ -11,13 +11,14 @@ import java.util.Collection;
 import app.excepcion.DAOExcepcion;
 import app.model.General;
 import app.zelper.ConexionBD;
-import app.model.Servicio;
+
 
 public class GeneralDAO extends BaseDAO {
 
+
     public Collection<General> buscarPorNombre(String nombre)
             throws DAOExcepcion {
-        String query = "select id, usuario, password  from General where id like ?";
+        String query = "select id, usuario, password from General where id like ?";
         Collection<General> lista = new ArrayList<General>();
         Connection con = null;
         PreparedStatement stmt = null;
@@ -46,16 +47,16 @@ public class GeneralDAO extends BaseDAO {
         return lista;
     }
 
-    public Servicio insertar(Servicio vo) throws DAOExcepcion {
-        String query = "insert into servicio(desripcion,costo_hora) values (?,?)";
+    public General insertar(General vo) throws DAOExcepcion {
+        String query = "insert into general(usuario,password) values (?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, vo.getDescripcion());
-            stmt.setDouble(2, vo.getCosto_hora());
+            stmt.setString(1, vo.getUsuario());
+            stmt.setString(2, vo.getPassword());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo insertar");
@@ -81,21 +82,21 @@ public class GeneralDAO extends BaseDAO {
         return vo;
     }
 
-    public Servicio obtener(int idServicio) throws DAOExcepcion {
-        Servicio vo = new Servicio();
+    public General obtener(int idusuario) throws DAOExcepcion {
+        General vo = new General();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select id, descripcion, costo_hora from servicio where id=?";
+            String query = "select id, usuario, password from General where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idServicio);
+            stmt.setInt(1, idusuario);
             rs = stmt.executeQuery();
             if (rs.next()) {
                 vo.setId(rs.getInt(1));
-                vo.setDescripcion(rs.getString(2));
-                vo.setCosto_hora(rs.getDouble(3));
+                vo.setUsuario(rs.getString(2));
+                vo.setPassword(rs.getString(3));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -108,14 +109,14 @@ public class GeneralDAO extends BaseDAO {
         return vo;
     }
 
-    public void eliminar(int IdServicio) throws DAOExcepcion {
-        String query = "delete from servicio WHERE id=?";
+    public void eliminar(int IdGeneral) throws DAOExcepcion {
+        String query = "delete from general WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, IdServicio);
+            stmt.setInt(1, IdGeneral);
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
@@ -129,15 +130,15 @@ public class GeneralDAO extends BaseDAO {
         }
     }
 
-    public Servicio actualizar(Servicio vo) throws DAOExcepcion {
-        String query = "update servicio set descripcion=?,costo_hora=? where id=?";
+    public General actualizar(General vo) throws DAOExcepcion {
+        String query = "update general set usuario=?,password=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, vo.getDescripcion());
-            stmt.setDouble(2, vo.getCosto_hora());
+            stmt.setString(1, vo.getUsuario());
+            stmt.setString(2, vo.getPassword());
             stmt.setInt(3, vo.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
@@ -153,21 +154,21 @@ public class GeneralDAO extends BaseDAO {
         return vo;
     }
 
-    public Collection<Servicio> listar() throws DAOExcepcion {
-        Collection<Servicio> c = new ArrayList<Servicio>();
+    public Collection<General> listar() throws DAOExcepcion {
+        Collection<General> c = new ArrayList<General>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, descripcion, costo_total from servicio order by descripcion";
+            String query = "select id, usuario, password from general order by usuario";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Servicio vo = new Servicio();
+                General vo = new General();
                 vo.setId(rs.getInt("id"));
-                vo.setDescripcion(rs.getString("descripcion"));
-                vo.setDescripcion(rs.getString("costo_total"));
+                vo.setUsuario(rs.getString("usuario"));
+                vo.setPassword(rs.getString("password"));
                 c.add(vo);
             }
 
