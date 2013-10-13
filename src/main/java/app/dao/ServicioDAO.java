@@ -15,7 +15,7 @@ import app.zelper.ConexionBD;
 
 public class ServicioDAO extends BaseDAO {
 
-    public Servicio insertar(Servicio vo) throws DAOExcepcion {
+    public Servicio insertar(Servicio servicio) throws DAOExcepcion {
         String query = "insert into servicio(desripcion,costo_hora) values (?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -23,8 +23,8 @@ public class ServicioDAO extends BaseDAO {
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, vo.getDescripcion());
-            stmt.setDouble(2, vo.getCosto_hora());
+            stmt.setString(1, servicio.getDescripcion());
+            stmt.setDouble(2, servicio.getCosto_hora());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo insertar");
@@ -37,7 +37,7 @@ public class ServicioDAO extends BaseDAO {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-            vo.setId(id);
+            servicio.setId(id);
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -47,11 +47,11 @@ public class ServicioDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return vo;
+        return servicio;
     }
 
-    public Servicio obtener(int idServicio) throws DAOExcepcion {
-        Servicio vo = new Servicio();
+    public Servicio obtener(Servicio servicio) throws DAOExcepcion {
+        int idServicio = servicio.getId();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -62,9 +62,9 @@ public class ServicioDAO extends BaseDAO {
             stmt.setInt(1, idServicio);
             rs = stmt.executeQuery();
             if (rs.next()) {
-                vo.setId(rs.getInt(1));
-                vo.setDescripcion(rs.getString(2));
-                vo.setCosto_hora(rs.getDouble(3));
+                servicio.setId(rs.getInt(1));
+                servicio.setDescripcion(rs.getString(2));
+                servicio.setCosto_hora(rs.getDouble(3));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -74,7 +74,7 @@ public class ServicioDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return vo;
+        return servicio;
     }
 
     public void eliminar(int IdServicio) throws DAOExcepcion {
