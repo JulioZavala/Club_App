@@ -17,6 +17,7 @@ public class Local {
     private String maps;
     private String telefono;
 
+    
     public Integer getId() {
         return id;
     }
