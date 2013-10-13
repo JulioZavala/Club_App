@@ -89,8 +89,8 @@ public class LocalDAO extends BaseDAO{
         return local;
     }
 
-    public Local obtener(int IdLocal) throws DAOExcepcion {
-        Local local = new Local();
+    public Local obtener(Local local) throws DAOExcepcion {
+        int idLocal = local.getId();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -98,7 +98,7 @@ public class LocalDAO extends BaseDAO{
             String query = "select id, direccion, descripcion, estado, maps, telefono from local where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, IdLocal);
+            stmt.setInt(1, idLocal);
             rs = stmt.executeQuery();
             if (rs.next()) {
                 local.setId(rs.getInt(1));
@@ -119,14 +119,15 @@ public class LocalDAO extends BaseDAO{
         return local;
     }
 
-    public void eliminar(int idlocal) throws DAOExcepcion {
+    public void eliminar(Local local) throws DAOExcepcion {
+        int idLocal = local.getId();
         String query = "delete from local WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idlocal);
+            stmt.setInt(1, idLocal);
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");

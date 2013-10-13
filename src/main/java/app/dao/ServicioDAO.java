@@ -77,14 +77,15 @@ public class ServicioDAO extends BaseDAO {
         return servicio;
     }
 
-    public void eliminar(int IdServicio) throws DAOExcepcion {
+    public void eliminar(Servicio servicio) throws DAOExcepcion {
+        int idServicio = servicio.getId();
         String query = "delete from servicio WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, IdServicio);
+            stmt.setInt(1, idServicio);
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");

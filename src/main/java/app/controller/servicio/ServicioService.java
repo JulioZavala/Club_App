@@ -30,4 +30,14 @@ public class ServicioService {
 
         return servicioDAO.obtener(servicio);
     }
+
+    public void eliminar(Servicio servicio) throws DAOExcepcion {
+
+        servicioDAO.eliminar(servicio);
+    }
+
+    public Servicio actualizar(Servicio servicio) throws DAOExcepcion {
+
+        return servicioDAO.actualizar(servicio);
+    }
 }
