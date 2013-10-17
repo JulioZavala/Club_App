@@ -1,33 +1,31 @@
 package app.dao;
 
+import app.model.Socio;
+import app.zelper.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-
-import app.zelper.ConexionBD;
-import app.model.Campo;
-import app.model.Local;
 import java.util.List;
 
-public class CampoDAO extends BaseDAO {
+public class SocioDAO extends BaseDAO {
 
-    public Campo save(Campo campo) throws DAOExcepcion {
-        String query = "insert into campo(descripcion,estado,tipo,costoHora,local) values (?,?,?,?,?)";
+    public Socio save(Socio socio) throws DAOExcepcion {
+        String query = "insert into socio(email, nombres, paterno, materno, celular, sexo, direccion) values (?,?,?,?,?,?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, campo.getDescripcion());
-            stmt.setInt(2, campo.getEstado());
-            stmt.setInt(3, campo.getTipo());
-            stmt.setDouble(4, campo.getCostoHora());
-            stmt.setLong(5, campo.getLocal().getId());
-
+            stmt.setString(1, socio.getEmail());
+            stmt.setString(2, socio.getNombres());
+            stmt.setString(3, socio.getPaterno());
+            stmt.setString(4, socio.getMaterno());
+            stmt.setInt(5, socio.getCelular());
+            stmt.setInt(6, socio.getSexo());
+            stmt.setString(7, socio.getDireccion());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo insertar");
@@ -40,7 +38,7 @@ public class CampoDAO extends BaseDAO {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-            campo.setId(id);
+            socio.setId(id);
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -50,31 +48,29 @@ public class CampoDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return socio;
     }
 
-    public Campo get(Campo campo) throws DAOExcepcion {
-        Campo item = new Campo();
-        Local item2 = new Local();
-        LocalDAO localDAO = new LocalDAO();
-
+    public Socio get(Socio socio) throws DAOExcepcion {
+        Socio item = new Socio();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select id, descripcion, estado, tipo, costoHora, id_local from campo where id=?";
+            String query = "select * from socio where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setLong(1, campo.getId());
+            stmt.setLong(1, socio.getId());
             rs = stmt.executeQuery();
             if (rs.next()) {
-                item.setId(rs.getInt(1));
-                item.setDescripcion(rs.getString(2));
-                item.setEstado(rs.getInt(3));
-                item.setTipo(rs.getInt(4));
-                item.setCostoHora(rs.getDouble(5));
-                item2.setId(rs.getInt(6));
-                item.setLocal(localDAO.get(item2));
+                item.setId(rs.getLong("id"));
+                item.setEmail(rs.getString("email"));
+                item.setNombres(rs.getString("nombres"));
+                item.setPaterno(rs.getString("paterno"));
+                item.setMaterno(rs.getString("materno"));
+                item.setCelular(rs.getInt("celular"));
+                item.setSexo(rs.getInt("sexo"));
+                item.setDireccion(rs.getString("direccion"));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -87,39 +83,43 @@ public class CampoDAO extends BaseDAO {
         return item;
     }
 
-    public void delete(Campo campo) throws DAOExcepcion {
-        String query = "delete from campo WHERE id=?";
+    public void delete(Socio socio) throws DAOExcepcion {
+
+        String query = "delete from socio WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setLong(1, campo.getId());
+            stmt.setLong(1, socio.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+
         } finally {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
     }
 
-    public Campo update(Campo campo) throws DAOExcepcion {
-        String query = "update campo set descripcion=?,estado=?,tipo=?,costoHora=?,local=? where id=?";
+    public Socio update(Socio socio) throws DAOExcepcion {
+        String query = "update socio set email=?,nombres=?,paterno=?,materno=?,celular=?,sexo=?,direccion=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, campo.getDescripcion());
-            stmt.setInt(2, campo.getEstado());
-            stmt.setInt(3, campo.getTipo());
-            stmt.setDouble(4, campo.getCostoHora());
-            stmt.setLong(5, campo.getLocal().getId());
+            stmt.setString(1, socio.getEmail());
+            stmt.setString(2, socio.getNombres());
+            stmt.setString(3, socio.getPaterno());
+            stmt.setString(4, socio.getMaterno());
+            stmt.setInt(5, socio.getCelular());
+            stmt.setInt(6, socio.getSexo());
+            stmt.setString(7, socio.getDireccion());
+            stmt.setLong(8, socio.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -131,26 +131,29 @@ public class CampoDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return socio;
     }
 
-    public List<Campo> list() throws DAOExcepcion {
-        List<Campo> lista = new ArrayList<Campo>();
+    public List<Socio> list() throws DAOExcepcion {
+        List<Socio> lista = new ArrayList<Socio>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, descripcion, estado, tipo, costoHora from campo order by id";
+            String query = "select * from socio order by id;";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Campo item = new Campo();
+                Socio item = new Socio();
                 item.setId(rs.getInt("id"));
-                item.setDescripcion(rs.getString("descripcion"));
-                item.setEstado(rs.getInt("estado"));
-                item.setTipo(rs.getInt("tipo"));
-                item.setCostoHora(rs.getInt("costoHora"));
+                item.setEmail(rs.getString("email"));
+                item.setNombres(rs.getString("nombres"));
+                item.setPaterno(rs.getString("paterno"));
+                item.setMaterno(rs.getString("materno"));
+                item.setCelular(rs.getInt("celular"));
+                item.setSexo(rs.getInt("sexo"));
+                item.setDireccion(rs.getString("direccion"));
                 lista.add(item);
             }
 

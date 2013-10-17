@@ -1,33 +1,37 @@
+
 package app.dao;
 
+import app.model.SocioAlquiler;
+import app.zelper.ConexionBD;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-
-import app.zelper.ConexionBD;
-import app.model.Campo;
-import app.model.Local;
 import java.util.List;
 
-public class CampoDAO extends BaseDAO {
 
-    public Campo save(Campo campo) throws DAOExcepcion {
-        String query = "insert into campo(descripcion,estado,tipo,costoHora,local) values (?,?,?,?,?)";
+
+
+public class SocioAlquilerDAO extends BaseDAO {
+    
+    
+    
+    public SocioAlquiler save(SocioAlquiler socioAlquiler) throws DAOExcepcion {
+        String query = "insert into solicitud_alquiler(hora_inicio, hora_fin, dia, servicios, estado, id_socio, id_campo) values (?,?,?,?,?,?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, campo.getDescripcion());
-            stmt.setInt(2, campo.getEstado());
-            stmt.setInt(3, campo.getTipo());
-            stmt.setDouble(4, campo.getCostoHora());
-            stmt.setLong(5, campo.getLocal().getId());
-
+            stmt.setString(1, socioAlquiler.getHoraInicio());
+            stmt.setString(2, socioAlquiler.getHoraFin());
+            stmt.setDate(3, socioAlquiler.getDia());
+            stmt.setString(4, socioAlquiler.getServicios());
+            stmt.setInt(5, socioAlquiler.getEstado());
+            stmt.setLong(6, socioAlquiler.getSocio().getId());
+            stmt.setLong(7, socioAlquiler.getCampo().getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo insertar");
@@ -40,7 +44,7 @@ public class CampoDAO extends BaseDAO {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-            campo.setId(id);
+            socioAlquiler.setId(id);
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -50,31 +54,29 @@ public class CampoDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return socioAlquiler;
     }
 
-    public Campo get(Campo campo) throws DAOExcepcion {
-        Campo item = new Campo();
-        Local item2 = new Local();
-        LocalDAO localDAO = new LocalDAO();
-
+    public SocioAlquiler get(SocioAlquiler socioAlquiler) throws DAOExcepcion {
+        SocioAlquiler item = new SocioAlquiler();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select id, descripcion, estado, tipo, costoHora, id_local from campo where id=?";
+            String query = "select * from solicitud_alquiler where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setLong(1, campo.getId());
+            stmt.setLong(1, socioAlquiler.getId());
             rs = stmt.executeQuery();
             if (rs.next()) {
-                item.setId(rs.getInt(1));
-                item.setDescripcion(rs.getString(2));
-                item.setEstado(rs.getInt(3));
-                item.setTipo(rs.getInt(4));
-                item.setCostoHora(rs.getDouble(5));
-                item2.setId(rs.getInt(6));
-                item.setLocal(localDAO.get(item2));
+                item.setId(rs.getLong("id"));
+                item.setHoraInicio(rs.getString("hora_inicio"));
+                item.setHoraFin(rs.getString("hora_fin"));
+                item.setDia(rs.getDate("dia"));
+                item.setServicios(rs.getString("servicios"));
+                item.setEstado(rs.getInt("estado"));
+                //item.setSocio();
+                //item.setCampo();
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -87,39 +89,43 @@ public class CampoDAO extends BaseDAO {
         return item;
     }
 
-    public void delete(Campo campo) throws DAOExcepcion {
-        String query = "delete from campo WHERE id=?";
+    public void delete(SocioAlquiler socioAlquiler) throws DAOExcepcion {
+
+        String query = "delete from solicitud_alquiler WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setLong(1, campo.getId());
+            stmt.setLong(1, socioAlquiler.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+
         } finally {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
     }
 
-    public Campo update(Campo campo) throws DAOExcepcion {
-        String query = "update campo set descripcion=?,estado=?,tipo=?,costoHora=?,local=? where id=?";
+    public SocioAlquiler update(SocioAlquiler socioAlquiler) throws DAOExcepcion {
+        String query = "update solicitud_alquiler set hora_inicio=?,hora_fin=?,dia=?,servicios=?,estado=?,id_socio=?,id_campo=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, campo.getDescripcion());
-            stmt.setInt(2, campo.getEstado());
-            stmt.setInt(3, campo.getTipo());
-            stmt.setDouble(4, campo.getCostoHora());
-            stmt.setLong(5, campo.getLocal().getId());
+            stmt.setString(1, socioAlquiler.getHoraInicio());
+            stmt.setString(2, socioAlquiler.getHoraFin());
+            stmt.setDate(3, socioAlquiler.getDia());
+            stmt.setString(4, socioAlquiler.getServicios());
+            stmt.setInt(5, socioAlquiler.getEstado());
+            stmt.setLong(6, socioAlquiler.getSocio().getId());
+            stmt.setLong(7, socioAlquiler.getCampo().getId());
+            stmt.setLong(8, socioAlquiler.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -131,26 +137,27 @@ public class CampoDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return socioAlquiler;
     }
 
-    public List<Campo> list() throws DAOExcepcion {
-        List<Campo> lista = new ArrayList<Campo>();
+    public List<SocioAlquiler> list() throws DAOExcepcion {
+        List<SocioAlquiler> lista = new ArrayList<SocioAlquiler>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, descripcion, estado, tipo, costoHora from campo order by id";
+            String query = "select * from solicitud_alquiler order by id;";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Campo item = new Campo();
-                item.setId(rs.getInt("id"));
-                item.setDescripcion(rs.getString("descripcion"));
+                SocioAlquiler item = new SocioAlquiler();
+                item.setId(rs.getLong("id"));
+                item.setHoraInicio(rs.getString("hora_inicio"));
+                item.setHoraFin(rs.getString("hora_fin"));
+                item.setDia(rs.getDate("dia"));
+                item.setServicios(rs.getString("servicios"));
                 item.setEstado(rs.getInt("estado"));
-                item.setTipo(rs.getInt("tipo"));
-                item.setCostoHora(rs.getInt("costoHora"));
                 lista.add(item);
             }
 
@@ -164,4 +171,6 @@ public class CampoDAO extends BaseDAO {
         }
         return lista;
     }
+    
+    
 }
