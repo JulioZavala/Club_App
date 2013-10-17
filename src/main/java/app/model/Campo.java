@@ -1,21 +1,19 @@
-
 package app.model;
-
 
 public class Campo {
 
-    private int id;
+    private long id;
     private String descripcion;
     private int estado;
     private int tipo;
     private double costoHora;
     private Local local;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -58,7 +56,4 @@ public class Campo {
     public void setLocal(Local local) {
         this.local = local;
     }
-    
-    
-    
 }

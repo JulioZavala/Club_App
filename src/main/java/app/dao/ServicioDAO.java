@@ -1,21 +1,18 @@
 package app.dao;
 
-import app.dao.BaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 
-import app.excepcion.DAOExcepcion;
-import app.model.General;
 import app.model.Servicio;
 import app.zelper.ConexionBD;
+import java.util.List;
 
 public class ServicioDAO extends BaseDAO {
 
-    public Servicio insertar(Servicio servicio) throws DAOExcepcion {
+    public Servicio save(Servicio servicio) throws DAOExcepcion {
         String query = "insert into servicio(desripcion,costo_hora) values (?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -24,7 +21,7 @@ public class ServicioDAO extends BaseDAO {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setString(1, servicio.getDescripcion());
-            stmt.setDouble(2, servicio.getCosto_hora());
+            stmt.setDouble(2, servicio.getCostoHora());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo insertar");
@@ -50,21 +47,21 @@ public class ServicioDAO extends BaseDAO {
         return servicio;
     }
 
-    public Servicio obtener(Servicio servicio) throws DAOExcepcion {
-        int idServicio = servicio.getId();
+    public Servicio get(Servicio servicio) throws DAOExcepcion {
+        Servicio servicioOriginal = new Servicio();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select id, descripcion, costo_hora from servicio where id=?";
+            String query = "select * from servicio where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idServicio);
+            stmt.setLong(1, servicio.getId());
             rs = stmt.executeQuery();
             if (rs.next()) {
-                servicio.setId(rs.getInt(1));
-                servicio.setDescripcion(rs.getString(2));
-                servicio.setCosto_hora(rs.getDouble(3));
+                servicioOriginal.setId(rs.getLong("id"));
+                servicioOriginal.setDescripcion(rs.getString("descripcion"));
+                servicioOriginal.setCostoHora(rs.getDouble("costo_hora"));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -74,41 +71,41 @@ public class ServicioDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return servicio;
+        return servicioOriginal;
     }
 
-    public void eliminar(Servicio servicio) throws DAOExcepcion {
-        int idServicio = servicio.getId();
+    public void delete(Servicio servicio) throws DAOExcepcion {
+
         String query = "delete from servicio WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idServicio);
+            stmt.setLong(1, servicio.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+
         } finally {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
     }
 
-    public Servicio actualizar(Servicio vo) throws DAOExcepcion {
+    public Servicio update(Servicio servicio) throws DAOExcepcion {
         String query = "update servicio set descripcion=?,costo_hora=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, vo.getDescripcion());
-            stmt.setDouble(2, vo.getCosto_hora());
-            stmt.setInt(3, vo.getId());
+            stmt.setString(1, servicio.getDescripcion());
+            stmt.setDouble(2, servicio.getCostoHora());
+            stmt.setLong(3, servicio.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -120,25 +117,25 @@ public class ServicioDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return vo;
+        return servicio;
     }
 
-    public Collection<Servicio> listar() throws DAOExcepcion {
-        Collection<Servicio> c = new ArrayList<Servicio>();
+    public List<Servicio> list() throws DAOExcepcion {
+        List<Servicio> lista = new ArrayList<Servicio>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, descripcion, costo_total from servicio order by descripcion";
+            String query = "select * from servicio order by id;";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                Servicio vo = new Servicio();
-                vo.setId(rs.getInt("id"));
-                vo.setDescripcion(rs.getString("descripcion"));
-                vo.setDescripcion(rs.getString("costo_total"));
-                c.add(vo);
+                Servicio item = new Servicio();
+                item.setId(rs.getInt("id"));
+                item.setDescripcion(rs.getString("descripcion"));
+                item.setCostoHora(rs.getDouble("costo_hora"));
+                lista.add(item);
             }
 
         } catch (SQLException e) {
@@ -149,6 +146,6 @@ public class ServicioDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return c;
+        return lista;
     }
 }

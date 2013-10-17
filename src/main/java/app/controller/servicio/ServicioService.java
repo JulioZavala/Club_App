@@ -1,9 +1,9 @@
 package app.controller.servicio;
 
 import app.dao.ServicioDAO;
-import app.excepcion.DAOExcepcion;
+import app.dao.DAOExcepcion;
 import app.model.Servicio;
-import java.util.Collection;
+import java.util.List;
 
 public class ServicioService {
 
@@ -14,30 +14,30 @@ public class ServicioService {
 
     }
 
-    public Collection<Servicio> listar() throws DAOExcepcion {
+    public List<Servicio> list() throws DAOExcepcion {
 
-        return servicioDAO.listar();
-
-    }
-
-    public Servicio insertar() throws DAOExcepcion {
-
-        return servicioDAO.insertar(null);
+        return servicioDAO.list();
 
     }
 
-    public Servicio obtener(Servicio servicio) throws DAOExcepcion {
+    public Servicio save(Servicio servicio) throws DAOExcepcion {
 
-        return servicioDAO.obtener(servicio);
+        return servicioDAO.save(servicio);
+
     }
 
-    public void eliminar(Servicio servicio) throws DAOExcepcion {
+    public Servicio get(Servicio servicio) throws DAOExcepcion {
 
-        servicioDAO.eliminar(servicio);
+        return servicioDAO.get(servicio);
     }
 
-    public Servicio actualizar(Servicio servicio) throws DAOExcepcion {
+    public void delete(Servicio servicio) throws DAOExcepcion {
 
-        return servicioDAO.actualizar(servicio);
+        servicioDAO.delete(servicio);
+    }
+
+    public Servicio update(Servicio servicio) throws DAOExcepcion {
+
+        return servicioDAO.update(servicio);
     }
 }

@@ -1,54 +1,19 @@
 package app.dao;
 
-
-import app.dao.BaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 
-import app.excepcion.DAOExcepcion;
 
 import app.zelper.ConexionBD;
 import app.model.Campo;
+import java.util.List;
 
-public class CampoDAO extends BaseDAO{
- 
- 
-    public Collection<Campo> buscarPorNombre(String nombre)
-            throws DAOExcepcion {
-            String query = "select id, descripcion,estado from campo where descripcion like ?";
-        Collection<Campo> lista = new ArrayList<Campo>();
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConexionBD.obtenerConexion();
-            stmt = con.prepareStatement(query);
-            stmt.setString(1, "%" + nombre + "%");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                Campo vo = new Campo();
-                vo.setId(rs.getInt("id"));
-                vo.setDescripcion(rs.getString("nombre"));
-                vo.setDescripcion(rs.getString("descripcion"));
-                lista.add(vo);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
-        } finally {
-            this.cerrarResultSet(rs);
-            this.cerrarStatement(stmt);
-            this.cerrarConexion(con);
-        }
-        System.out.println(lista.size());
-        return lista;
-    }
+public class CampoDAO extends BaseDAO {
 
-    public Campo insertar(Campo campo) throws DAOExcepcion {
+    public Campo save(Campo campo) throws DAOExcepcion {
         String query = "insert into campo(descripcion,estado,tipo,costoHora,local) values (?,?,?,?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -60,7 +25,7 @@ public class CampoDAO extends BaseDAO{
             stmt.setInt(2, campo.getEstado());
             stmt.setInt(3, campo.getTipo());
             stmt.setDouble(4, campo.getCostoHora());
-            stmt.setInt(5, campo.getLocal().getId());
+            stmt.setLong(5, campo.getLocal().getId());
 
             int i = stmt.executeUpdate();
             if (i != 1) {
@@ -87,8 +52,8 @@ public class CampoDAO extends BaseDAO{
         return campo;
     }
 
-    public Campo obtener(int idCampo) throws DAOExcepcion {
-        Campo campo = new Campo();
+    public Campo get(Campo campo) throws DAOExcepcion {
+        Campo item = new Campo();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -96,14 +61,15 @@ public class CampoDAO extends BaseDAO{
             String query = "select id, descripcion, estado, tipo, costoHora from campo where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idCampo);
+            stmt.setLong(1, campo.getId());
             rs = stmt.executeQuery();
             if (rs.next()) {
-                campo.setId(rs.getInt(1));
-                campo.setDescripcion(rs.getString(2));
-                campo.setEstado(rs.getInt(3));
-                campo.setTipo(rs.getInt(4));
-                campo.setCostoHora(rs.getDouble(5));
+                item.setId(rs.getInt(1));
+                item.setDescripcion(rs.getString(2));
+                item.setEstado(rs.getInt(3));
+                item.setTipo(rs.getInt(4));
+                item.setCostoHora(rs.getDouble(5));
+                //item.setLocal();
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -113,17 +79,17 @@ public class CampoDAO extends BaseDAO{
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return campo;
+        return item;
     }
 
-    public void eliminar(int idCampo) throws DAOExcepcion {
+    public void delete(Campo campo) throws DAOExcepcion {
         String query = "delete from campo WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idCampo);
+            stmt.setLong(1, campo.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
@@ -137,7 +103,7 @@ public class CampoDAO extends BaseDAO{
         }
     }
 
-    public Campo actualizar(Campo campo) throws DAOExcepcion {
+    public Campo update(Campo campo) throws DAOExcepcion {
         String query = "update campo set descripcion=?,estado=?,tipo=?,costoHora=?,local=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -148,7 +114,7 @@ public class CampoDAO extends BaseDAO{
             stmt.setInt(2, campo.getEstado());
             stmt.setInt(3, campo.getTipo());
             stmt.setDouble(4, campo.getCostoHora());
-            stmt.setInt(5, campo.getLocal().getId());
+            stmt.setLong(5, campo.getLocal().getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -163,8 +129,8 @@ public class CampoDAO extends BaseDAO{
         return campo;
     }
 
-    public Collection<Campo> listar() throws DAOExcepcion {
-        Collection<Campo> c = new ArrayList<Campo>();
+    public List<Campo> list() throws DAOExcepcion {
+        List<Campo> lista = new ArrayList<Campo>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -180,7 +146,7 @@ public class CampoDAO extends BaseDAO{
                 item.setEstado(rs.getInt("estado"));
                 item.setTipo(rs.getInt("tipo"));
                 item.setCostoHora(rs.getInt("costoHora"));
-                c.add(item);
+                lista.add(item);
             }
 
         } catch (SQLException e) {
@@ -191,6 +157,6 @@ public class CampoDAO extends BaseDAO{
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return c;
+        return lista;
     }
 }

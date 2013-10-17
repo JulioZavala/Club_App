@@ -1,24 +1,21 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package app.model;
 
-/**
- *
- * @author LAB704-00
- */
 public class Socio {
 
-    private Integer id;
+    private long id;
     private String email;
     private String nombres;
+    private String paterno;
+    private String materno;
+    private int celular;
+    private int sexo;
+    private String direccion;
 
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -54,19 +51,19 @@ public class Socio {
         this.materno = materno;
     }
 
-    public String getCelular() {
+    public int getCelular() {
         return celular;
     }
 
-    public void setCelular(String celular) {
+    public void setCelular(int celular) {
         this.celular = celular;
     }
 
-    public String getSexo() {
+    public int getSexo() {
         return sexo;
     }
 
-    public void setSexo(String sexo) {
+    public void setSexo(int sexo) {
         this.sexo = sexo;
     }
 
@@ -77,9 +74,4 @@ public class Socio {
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
-    private String paterno;
-    private String materno;
-    private String celular;
-    private String sexo;
-    private String direccion;
 }

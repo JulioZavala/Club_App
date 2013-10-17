@@ -1,24 +1,16 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package app.model;
 
-/**
- *
- * @author LAB704-00
- */
 public class Servicio {
-    
-    private Integer id ;
-    private String descripcion ;    
-    private Double costo_hora;
 
-    public Integer getId() {
+    private long id;
+    private String descripcion;
+    private double costoHora;
+
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -30,12 +22,11 @@ public class Servicio {
         this.descripcion = descripcion;
     }
 
-    public Double getCosto_hora() {
-        return costo_hora;
+    public double getCostoHora() {
+        return costoHora;
     }
 
-    public void setCosto_hora(Double costo_hora) {
-        this.costo_hora = costo_hora;
+    public void setCostoHora(double costoHora) {
+        this.costoHora = costoHora;
     }
-    
 }

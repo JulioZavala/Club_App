@@ -1,53 +1,22 @@
 package app.dao;
 
-import app.dao.BaseDAO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 
-import app.excepcion.DAOExcepcion;
-import app.model.General;
+import app.model.Administrador;
 import app.zelper.ConexionBD;
+import java.util.List;
 
 
-public class GeneralDAO extends BaseDAO {
+public class AdministradorDAO extends BaseDAO {
 
 
-    public Collection<General> buscarPorNombre(String nombre)
-            throws DAOExcepcion {
-        String query = "select id, usuario, password from General where id like ?";
-        Collection<General> lista = new ArrayList<General>();
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConexionBD.obtenerConexion();
-            stmt = con.prepareStatement(query);
-            stmt.setString(1, "%" + nombre + "%");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                General vo = new General();
-                vo.setId(rs.getInt("id"));
-                vo.setUsuario(rs.getString("usuario"));
-                vo.setPassword(rs.getString("password"));
-                lista.add(vo);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
-        } finally {
-            this.cerrarResultSet(rs);
-            this.cerrarStatement(stmt);
-            this.cerrarConexion(con);
-        }
-        System.out.println(lista.size());
-        return lista;
-    }
 
-    public General insertar(General vo) throws DAOExcepcion {
+
+    public Administrador save(Administrador administrador) throws DAOExcepcion {
         String query = "insert into general(usuario,password) values (?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -55,8 +24,8 @@ public class GeneralDAO extends BaseDAO {
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, vo.getUsuario());
-            stmt.setString(2, vo.getPassword());
+            stmt.setString(1, administrador.getUsuario());
+            stmt.setString(2, administrador.getPassword());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo insertar");
@@ -69,7 +38,7 @@ public class GeneralDAO extends BaseDAO {
             if (rs.next()) {
                 id = rs.getInt(1);
             }
-            vo.setId(id);
+            administrador.setId(id);
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -79,24 +48,24 @@ public class GeneralDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return vo;
+        return administrador;
     }
 
-    public General obtener(int idusuario) throws DAOExcepcion {
-        General vo = new General();
+    public Administrador get(Administrador administrador) throws DAOExcepcion {
+        Administrador item = new Administrador();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select id, usuario, password from General where id=?";
+            String query = "select * from General where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, idusuario);
+            stmt.setLong(1, administrador.getId());
             rs = stmt.executeQuery();
             if (rs.next()) {
-                vo.setId(rs.getInt(1));
-                vo.setUsuario(rs.getString(2));
-                vo.setPassword(rs.getString(3));
+                item.setId(rs.getInt(1));
+                item.setUsuario(rs.getString(2));
+                item.setPassword(rs.getString(3));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -106,17 +75,17 @@ public class GeneralDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return vo;
+        return item;
     }
 
-    public void eliminar(int IdGeneral) throws DAOExcepcion {
+    public void delete(Administrador administrador) throws DAOExcepcion {
         String query = "delete from general WHERE id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setInt(1, IdGeneral);
+            stmt.setLong(1, administrador.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo eliminar");
@@ -130,16 +99,16 @@ public class GeneralDAO extends BaseDAO {
         }
     }
 
-    public General actualizar(General vo) throws DAOExcepcion {
+    public Administrador update(Administrador administrador) throws DAOExcepcion {
         String query = "update general set usuario=?,password=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
-            stmt.setString(1, vo.getUsuario());
-            stmt.setString(2, vo.getPassword());
-            stmt.setInt(3, vo.getId());
+            stmt.setString(1, administrador.getUsuario());
+            stmt.setString(2, administrador.getPassword());
+            stmt.setLong(3, administrador.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -151,25 +120,25 @@ public class GeneralDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return vo;
+        return administrador;
     }
 
-    public Collection<General> listar() throws DAOExcepcion {
-        Collection<General> c = new ArrayList<General>();
+    public List<Administrador> list() throws DAOExcepcion {
+        List<Administrador> lista = new ArrayList<Administrador>();
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, usuario, password from general order by usuario";
+            String query = "select * from general order by usuario";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
             while (rs.next()) {
-                General vo = new General();
-                vo.setId(rs.getInt("id"));
-                vo.setUsuario(rs.getString("usuario"));
-                vo.setPassword(rs.getString("password"));
-                c.add(vo);
+                Administrador item = new Administrador();
+                item.setId(rs.getInt("id"));
+                item.setUsuario(rs.getString("usuario"));
+                item.setPassword(rs.getString("password"));
+                lista.add(item);
             }
 
         } catch (SQLException e) {
@@ -180,6 +149,6 @@ public class GeneralDAO extends BaseDAO {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
         }
-        return c;
+        return lista;
     }
 }

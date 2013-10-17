@@ -1,28 +1,19 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package app.model;
 
-/**
- *
- * @author LAB704-00
- */
 public class Local {
 
-    private Integer id;
+    private long id;
     private String direccion;
     private String descripcion;
-    private Integer estado;
+    private int estado;
     private String maps;
     private String telefono;
 
-    
-    public Integer getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -42,11 +33,11 @@ public class Local {
         this.descripcion = descripcion;
     }
 
-    public Integer getEstado() {
+    public int getEstado() {
         return estado;
     }
 
-    public void setEstado(Integer estado) {
+    public void setEstado(int estado) {
         this.estado = estado;
     }
 
