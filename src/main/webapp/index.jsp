@@ -6,11 +6,11 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
-        <%@include file="header.jsp" %>
+        <%@include file="public/header.jsp" %>
     </head>
     <body>
         <h1>Hello World - index!</h1>
 
-        <%@include file="footer.jsp" %>
+        <%@include file="public/footer.jsp" %>
     </body>
 </html>
