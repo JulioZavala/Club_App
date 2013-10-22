@@ -1,6 +1,8 @@
 
 package app.dao;
 
+import app.model.Campo;
+import app.model.Socio;
 import app.model.SocioAlquiler;
 import app.zelper.ConexionBD;
 import java.sql.Connection;
@@ -68,6 +70,10 @@ public class SocioAlquilerDAO extends BaseDAO {
             stmt = con.prepareStatement(query);
             stmt.setLong(1, socioAlquiler.getId());
             rs = stmt.executeQuery();
+            
+            SocioDAO socioDAO = new SocioDAO();
+            CampoDAO campoDAO = new CampoDAO();
+            
             if (rs.next()) {
                 item.setId(rs.getLong("id"));
                 item.setHoraInicio(rs.getString("hora_inicio"));
@@ -75,8 +81,14 @@ public class SocioAlquilerDAO extends BaseDAO {
                 item.setDia(rs.getDate("dia"));
                 item.setServicios(rs.getString("servicios"));
                 item.setEstado(rs.getInt("estado"));
-                //item.setSocio();
-                //item.setCampo();
+                
+                Socio socio = new Socio();
+                socio.setId(rs.getLong("id_socio"));
+                item.setSocio(socioDAO.get(socio));
+                
+                Campo campo = new Campo();
+                campo.setId(rs.getLong("id_campo"));
+                item.setCampo(campoDAO.get(campo));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -158,6 +170,15 @@ public class SocioAlquilerDAO extends BaseDAO {
                 item.setDia(rs.getDate("dia"));
                 item.setServicios(rs.getString("servicios"));
                 item.setEstado(rs.getInt("estado"));
+                
+                Socio socio = new Socio();
+                socio.setId(rs.getLong("id_socio"));
+                item.setSocio(socio);
+                
+                Campo campo = new Campo();
+                campo.setId(rs.getLong("id_campo"));
+                item.setCampo(campo);
+                
                 lista.add(item);
             }
 

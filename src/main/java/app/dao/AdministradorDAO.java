@@ -57,7 +57,7 @@ public class AdministradorDAO extends BaseDAO {
         PreparedStatement stmt = null;
         ResultSet rs = null;
         try {
-            String query = "select * from General where id=?";
+            String query = "select * from general where id=?";
             con = ConexionBD.obtenerConexion();
             stmt = con.prepareStatement(query);
             stmt.setLong(1, administrador.getId());

@@ -13,7 +13,7 @@ import java.util.List;
 public class ServicioDAO extends BaseDAO {
 
     public Servicio save(Servicio servicio) throws DAOExcepcion {
-        String query = "insert into servicio(desripcion,costo_hora) values (?,?)";
+        String query = "insert into servicio(descripcion,costo_hora) values (?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

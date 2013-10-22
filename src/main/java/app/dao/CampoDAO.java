@@ -15,7 +15,7 @@ import java.util.List;
 public class CampoDAO extends BaseDAO {
 
     public Campo save(Campo campo) throws DAOExcepcion {
-        String query = "insert into campo(descripcion,estado,tipo,costoHora,local) values (?,?,?,?,?)";
+        String query = "insert into campo(descripcion,estado,tipo,costo_hora,id_local) values (?,?,?,?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -55,7 +55,7 @@ public class CampoDAO extends BaseDAO {
 
     public Campo get(Campo campo) throws DAOExcepcion {
         Campo item = new Campo();
-        Local item2 = new Local();
+        
         LocalDAO localDAO = new LocalDAO();
 
         Connection con = null;
@@ -68,13 +68,16 @@ public class CampoDAO extends BaseDAO {
             stmt.setLong(1, campo.getId());
             rs = stmt.executeQuery();
             if (rs.next()) {
-                item.setId(rs.getInt(1));
-                item.setDescripcion(rs.getString(2));
-                item.setEstado(rs.getInt(3));
-                item.setTipo(rs.getInt(4));
-                item.setCostoHora(rs.getDouble(5));
-                item2.setId(rs.getInt(6));
-                item.setLocal(localDAO.get(item2));
+                item.setId(rs.getInt("id"));
+                item.setDescripcion(rs.getString("descripcion"));
+                item.setEstado(rs.getInt("estado"));
+                item.setTipo(rs.getInt("tipo"));
+                item.setCostoHora(rs.getDouble("costo_hora"));
+                
+                Local local = new Local();
+                
+                local.setId(rs.getInt("id_local"));
+                item.setLocal(localDAO.get(local));
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
@@ -109,7 +112,7 @@ public class CampoDAO extends BaseDAO {
     }
 
     public Campo update(Campo campo) throws DAOExcepcion {
-        String query = "update campo set descripcion=?,estado=?,tipo=?,costoHora=?,local=? where id=?";
+        String query = "update campo set descripcion=?,estado=?,tipo=?,costo_hora=?,id_local=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
         try {
@@ -120,6 +123,8 @@ public class CampoDAO extends BaseDAO {
             stmt.setInt(3, campo.getTipo());
             stmt.setDouble(4, campo.getCostoHora());
             stmt.setLong(5, campo.getLocal().getId());
+            stmt.setLong(6,campo.getId());
+            
             int i = stmt.executeUpdate();
             if (i != 1) {
                 throw new SQLException("No se pudo actualizar");
@@ -141,16 +146,24 @@ public class CampoDAO extends BaseDAO {
         ResultSet rs = null;
         try {
             con = ConexionBD.obtenerConexion();
-            String query = "select id, descripcion, estado, tipo, costoHora from campo order by id";
+            String query = "select * from campo order by id";
             stmt = con.prepareStatement(query);
             rs = stmt.executeQuery();
+            
+            LocalDAO localDAO = new LocalDAO();
+            
             while (rs.next()) {
                 Campo item = new Campo();
                 item.setId(rs.getInt("id"));
                 item.setDescripcion(rs.getString("descripcion"));
                 item.setEstado(rs.getInt("estado"));
                 item.setTipo(rs.getInt("tipo"));
-                item.setCostoHora(rs.getInt("costoHora"));
+                item.setCostoHora(rs.getInt("costo_hora"));
+                
+                Local local = new Local();
+                local.setId(rs.getInt("id_local"));
+                item.setLocal(localDAO.get(local));
+                
                 lista.add(item);
             }
 

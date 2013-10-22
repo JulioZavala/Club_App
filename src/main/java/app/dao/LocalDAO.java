@@ -12,39 +12,7 @@ import java.util.List;
 
 public class LocalDAO extends BaseDAO {
 
-    public List<Local> buscarPorNombre(String nombre)
-            throws DAOExcepcion {
-        String query = "select * from local where descripcion like ?";
-        List<Local> lista = new ArrayList<Local>();
-        Connection con = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            con = ConexionBD.obtenerConexion();
-            stmt = con.prepareStatement(query);
-            stmt.setString(1, "%" + nombre + "%");
-            rs = stmt.executeQuery();
-            while (rs.next()) {
-                Local item = new Local();
-                item.setId(rs.getInt("id"));
-                item.setDescripcion(rs.getString("direccion"));
-                item.setDescripcion(rs.getString("descripcion"));
-                item.setMaps(rs.getString("maps"));
-                item.setTelefono(rs.getString("telefono"));
-                item.setEstado(rs.getInt("estado"));
-                lista.add(item);
-            }
-        } catch (SQLException e) {
-            System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
-        } finally {
-            this.cerrarResultSet(rs);
-            this.cerrarStatement(stmt);
-            this.cerrarConexion(con);
-        }
-        System.out.println(lista.size());
-        return lista;
-    }
+
 
     public Local save(Local local) throws DAOExcepcion {
         String query = "insert into local(direccion, descripcion, estado, maps, telefono) values (?,?,?,?,?)";
@@ -149,7 +117,7 @@ public class LocalDAO extends BaseDAO {
             stmt.setString(2, local.getDescripcion());
             stmt.setInt(3, local.getEstado());
             stmt.setString(4, local.getMaps());
-            stmt.setString(5, local.getDescripcion());
+            stmt.setString(5, local.getTelefono());
             stmt.setLong(6, local.getId());
             int i = stmt.executeUpdate();
             if (i != 1) {
