@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ServicioDAO extends BaseDAO {
 
-    public Servicio save(Servicio servicio) throws DAOExcepcion {
+    public Servicio save(Servicio servicio) {
         String query = "insert into servicio(descripcion,costo_hora) values (?,?)";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -38,7 +38,7 @@ public class ServicioDAO extends BaseDAO {
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+            
         } finally {
             this.cerrarResultSet(rs);
             this.cerrarStatement(stmt);
@@ -47,7 +47,7 @@ public class ServicioDAO extends BaseDAO {
         return servicio;
     }
 
-    public Servicio get(Servicio servicio) throws DAOExcepcion {
+    public Servicio get(Servicio servicio) {
         Servicio servicioOriginal = new Servicio();
         Connection con = null;
         PreparedStatement stmt = null;
@@ -65,7 +65,7 @@ public class ServicioDAO extends BaseDAO {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+            
         } finally {
             this.cerrarResultSet(rs);
             this.cerrarStatement(stmt);
@@ -74,7 +74,7 @@ public class ServicioDAO extends BaseDAO {
         return servicioOriginal;
     }
 
-    public void delete(Servicio servicio) throws DAOExcepcion {
+    public void delete(Servicio servicio) {
 
         String query = "delete from servicio WHERE id=?";
         Connection con = null;
@@ -96,7 +96,7 @@ public class ServicioDAO extends BaseDAO {
         }
     }
 
-    public Servicio update(Servicio servicio) throws DAOExcepcion {
+    public Servicio update(Servicio servicio) {
         String query = "update servicio set descripcion=?,costo_hora=? where id=?";
         Connection con = null;
         PreparedStatement stmt = null;
@@ -112,7 +112,7 @@ public class ServicioDAO extends BaseDAO {
             }
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+            
         } finally {
             this.cerrarStatement(stmt);
             this.cerrarConexion(con);
@@ -120,7 +120,7 @@ public class ServicioDAO extends BaseDAO {
         return servicio;
     }
 
-    public List<Servicio> list() throws DAOExcepcion {
+    public List<Servicio> list() {
         List<Servicio> lista = new ArrayList<Servicio>();
         Connection con = null;
         PreparedStatement stmt = null;
@@ -140,7 +140,7 @@ public class ServicioDAO extends BaseDAO {
 
         } catch (SQLException e) {
             System.err.println(e.getMessage());
-            throw new DAOExcepcion(e.getMessage());
+           
         } finally {
             this.cerrarResultSet(rs);
             this.cerrarStatement(stmt);

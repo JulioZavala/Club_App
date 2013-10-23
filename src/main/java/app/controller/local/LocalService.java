@@ -1,7 +1,6 @@
 package app.controller.local;
 
 import app.dao.LocalDAO;
-import app.dao.DAOExcepcion;
 import app.model.Local;
 import java.util.List;
 
@@ -13,29 +12,29 @@ public class LocalService {
         localDAO = new LocalDAO();
     }
 
-    public List<Local> list() throws DAOExcepcion {
+    public List<Local> list() {
 
         return localDAO.list();
 
     }
 
-    public Local save(Local local) throws DAOExcepcion {
+    public Local save(Local local) {
 
         return localDAO.save(local);
 
     }
 
-    public Local get(Local local) throws DAOExcepcion {
+    public Local get(Local local) {
 
         return localDAO.get(local);
     }
 
-    public void delete(Local local) throws DAOExcepcion {
+    public void delete(Local local) {
 
         localDAO.delete(local);
     }
 
-    public Local update(Local local) throws DAOExcepcion {
+    public Local update(Local local) {
 
         return localDAO.update(local);
     }
