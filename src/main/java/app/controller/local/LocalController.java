@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/adm/local")
+@WebServlet("/adm/locales")
 public class LocalController extends HttpServlet {
 
     private LocalService service;
